@@ -1,0 +1,368 @@
+@use "sass:math";
+
+// Подключение миксинов ===========================================================================================================================================================================================================================================================================
+@import "base/mixins";
+
+// Подключение шрифтов ===========================================================================================================================================================================================================================================================================
+//&display=swap - добавить при подключении через плагин
+
+// Подключить если есть локальные файлы шрифтов
+@import "fonts/fonts";
+
+// Подключение иконочных шрифтов ==============================================================================================================================================================================================================================================================================
+// Подключить если есть файл иконочного шрифта
+@import "fonts/icons";
+
+// Шрифт по умолчанию ==============================================================================================================================================================================================================================================================================
+$fontFamily: "SFUIDisplay";
+$fontSize: rem(14); // где 14(px) - размер шрифта по умолчанию из макета
+
+// Основные цвета
+$mainColor: #000; // Цвет шрифта по умолчанию
+
+// НАСТРОЙКИ ===============================================================================================================================================================================================================================================================================================
+// Минимальная ширина страницы
+$minWidth: 320;
+// Ширина полотна (макета)
+$maxWidth: 1200;
+// Ширина ограничивающего контейнера (0 = нет ограничения)
+$maxWidthContainer: 470;
+// Общий отступ у контейнера
+// (30 = по 15px слева и справа, 0 = нет отступа)
+$containerPadding: 40;
+
+// Ширина срабатывания первого брейкпоинта
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Брейк-поинты
+$pc: em($containerWidth); // ПК, ноутбуки, некоторые планшеты в горизонтальном положении
+$tablet: em(959.98); // Планшеты, некоторые телефоны в горизонтальном положении
+$tabletSmall: em(639.98); // Телефоны L
+$mobile: em(479.98); // Телефоны L
+$mobileSmall: em(319.98); // Телефоны S
+
+// Тип адаптива:
+// 1 = отзывчивость (у контейнера нет брейкпоинтов),
+// 2 = по брейк-поинтам (контейнер меняет свою ширину по брейк-поинтам)
+$responsiveType: 2;
+
+// Обнуление и общие параметры ============================================================================================================================================================================================== =============================================================================================== ===============================================================================================
+@import "base/null";
+
+body {
+	// Скролл заблокирован
+	.lock & {
+		overflow: hidden;
+		touch-action: none;
+	}
+	// Сайт загружен
+	.loaded & {
+	}
+}
+// Оболочка ============================================================================================================================================================================================================================================================================================================================================================================================================================================
+.wrapper {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	// Прижимаем footer
+	> main {
+		flex: 1 1 auto;
+	}
+	// Фикс для слайдеров
+	> * {
+		min-width: 0;
+	}
+}
+// Ограничивающий контейнер ======================================================================================================================================================================================================================
+
+/*
+(i) Стили будут применяться ко 
+всем классам содержащим *__container
+Например header__container, main__container и т.д.
+Снипет (HTML): cnt
+*/
+@if ($responsiveType==1) {
+	// Отзывчивая
+	[class*="__container"] {
+		@if ($maxWidthContainer>0) {
+			max-width: rem($maxWidthContainer);
+			box-sizing: content-box;
+			margin: 0 auto;
+		}
+		@if ($containerPadding>0) {
+			padding: 0 rem(math.div($containerPadding, 2));
+		}
+	}
+} @else {
+	// По брейк-поинтам
+	[class*="__container"] {
+		margin: 0 auto;
+		@if ($maxWidthContainer>0) {
+			max-width: rem($maxWidthContainer);
+			box-sizing: content-box;
+			padding: 20px;
+		} @else {
+			@if ($containerPadding>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+		@media (max-width: $pc) {
+			max-width: rem(470);
+		}
+		@media (max-width: $tablet) {
+			max-width: rem(350);
+		}
+		@media (max-width: $tabletSmall) {
+			max-width: rem(400);
+		}
+		@media (max-width: $mobile) {
+			max-width: rem(440);
+		}
+		@media (max-width: $mobileSmall) {
+			max-width: none;
+			@if ($containerPadding>0 and $maxWidthContainer>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+	}
+}
+
+//========================================================================================================================================================
+
+.test {
+	padding: 71px 0px 0px 0px;
+	// .test__container
+	&__container {
+	}
+	// .test__logo
+	&__logo {
+		font-size: rem(48);
+		text-align: center;
+		display: block;
+		margin-bottom: rem(57);
+		@media (max-width: $mobile) {
+			margin-bottom: rem(59);
+		}
+	}
+	// .test__body
+	&__body {
+	}
+	// .test__top
+	&__top {
+		text-align: center;
+		margin-bottom: rem(29);
+	}
+	// .test__title
+	&__title {
+		font-weight: 600;
+		font-size: 34px;
+		line-height: 41px;
+		color: #000000;
+		margin-bottom: rem(12);
+		@media (max-width: $mobile) {
+			font-size: 25px;
+			line-height: 30px;
+		}
+	}
+	// .test__subtitle
+	&__subtitle {
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(60, 60, 67, 0.6);
+		&:not(:last-child) {
+			margin-bottom: rem(6);
+		}
+	}
+	// .test__form
+	&__form {
+	}
+}
+
+.form-test {
+	// .form-test__names
+	&__names {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: rem(16);
+		@media (max-width: $mobile) {
+			flex-direction: column;
+		}
+	}
+	// .form-test__first
+	&__first {
+		width: 225px;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(0, 0, 0, 0.26);
+		padding: 14px;
+		@media (max-width: $tablet) {
+			width: 100%;
+			margin-right: 20px;
+		}
+		@media (max-width: $mobile) {
+			margin-bottom: rem(16);
+		}
+	}
+	// .form-test__last
+	&__last {
+		width: 225px;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(0, 0, 0, 0.26);
+		padding: 14px;
+		@media (max-width: $tablet) {
+			width: 100%;
+		}
+	}
+	// .form-test__email
+	&__email {
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(0, 0, 0, 0.26);
+		width: 100%;
+		padding: 14px;
+		margin-bottom: rem(6);
+	}
+	// .form-test__id
+	&__id {
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 16px;
+		color: rgba(60, 60, 67, 0.6);
+		margin-bottom: rem(16);
+	}
+	// .form-test__pass
+	&__pass {
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(0, 0, 0, 0.26);
+		width: 100%;
+		padding: 14px;
+		margin-bottom: rem(16);
+	}
+	// .form-test__confirm-pass
+	&__confirm-pass {
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 20px;
+		color: rgba(0, 0, 0, 0.26);
+		width: 100%;
+		padding: 14px;
+		margin-bottom: rem(29);
+	}
+	// .form-test__bottom
+	&__bottom {
+		text-align: center;
+	}
+	// .form-test__log
+	&__log {
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 18px;
+		color: rgba(60, 60, 67, 0.6);
+		margin-bottom: rem(18);
+		a {
+			color: #007aff;
+		}
+		@media (max-width: $tablet) {
+			font-size: 17px;
+			line-height: 20px;
+			margin-bottom: rem(30);
+		}
+	}
+	// .form-test__item
+	&__item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: rem(30);
+		position: relative;
+		label {
+			position: relative;
+			cursor: pointer;
+			&:before {
+				content: "";
+				background: linear-gradient(180deg, #4b91f7 0%, #367af6 100%);
+				border: 0.5px solid rgba(0, 0, 0, 0.12);
+				border-radius: 3px;
+				width: 14px;
+				height: 14px;
+				display: inline-block;
+				position: relative;
+				vertical-align: middle;
+				cursor: pointer;
+				margin-right: 15px;
+				left: 2px;
+				top: -1px;
+			}
+		}
+		input {
+			padding: 0;
+			height: initial;
+			width: initial;
+			margin-bottom: 0;
+			display: none;
+			cursor: pointer;
+		}
+		input:checked + label:after {
+			content: "";
+			background-image: url(../img/Checkmark.png);
+			background-repeat: no-repeat;
+			display: block;
+			position: absolute;
+			top: 5px;
+			left: 4px;
+			width: 14px;
+			height: 14px;
+		}
+	}
+	// .form-test__check
+	&__check {
+		// width: 16px;
+		// height: 16px;
+		// margin-right: 13px;
+	}
+	// .form-test__agree
+	&__agree {
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 18px;
+		letter-spacing: -0.078px;
+		color: rgba(60, 60, 67, 0.6);
+		a {
+			color: #007aff;
+		}
+		@media (max-width: $tablet) {
+			font-size: 15px;
+			line-height: 18px;
+		}
+	}
+	// .form-test__button
+	&__button {
+		font-weight: 500;
+		font-size: 17px;
+		line-height: 20px;
+		color: #ffffff;
+		background: linear-gradient(180deg, #4b91f7 0%, #367af6 100%);
+		border-radius: 6px;
+		padding: 4px 14px;
+	}
+}
+
+//========================================================================================================================================================
